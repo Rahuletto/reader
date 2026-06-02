@@ -1,0 +1,36 @@
+{
+  "name": "reader",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && oxlint",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint",
+    "test": "tsx --test tests/integration.test.ts",
+    "test:integration": "tsx --test tests/integration.test.ts",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^1.4.0",
+    "@scalar/hono-api-reference": "^0.10.20",
+    "@toon-format/toon": "^2.3.0",
+    "hono": "^4.12.23",
+    "linkedom": "^0.18.12",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260603.1",
+    "@types/turndown": "^5.0.6",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.4.0"
+  }
+}
