@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "check": "tsc --noEmit && oxlint",
+    "check": "tsc --noEmit && tsc --noEmit -p tsconfig.tests.json && oxlint",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "format": "oxfmt --write .",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260603.1",
+    "@types/node": "^22.15.30",
     "@types/turndown": "^5.0.6",
     "oxfmt": "^0.53.0",
     "oxlint": "^1.68.0",

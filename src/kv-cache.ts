@@ -73,11 +73,7 @@ export async function getCachedRead(
   kv: KVNamespace,
   cacheKey: string,
 ): Promise<CachedReadPayload | null> {
-  try {
-    return await kv.get<CachedReadPayload>(cacheKey, "json");
-  } catch {
-    return null;
-  }
+  return kv.get<CachedReadPayload>(cacheKey, "json");
 }
 
 export async function putCachedRead(
