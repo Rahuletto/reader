@@ -29,6 +29,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# agent skill installs (source: skills/)
+.agents/
+
 # misc
 .DS_Store
 worker-configuration.d.ts
