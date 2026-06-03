@@ -1,0 +1,10 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Reader",
+      "description": "Fetch web pages as clean markdown for AI agents via reader.marban.lol.",
+      "skills": ["reader-fetch"]
+    }
+  ]
+}

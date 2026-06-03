@@ -58,8 +58,8 @@ Read the JSON body for `error` and `message` on failures.
 
 ## Response headers
 
-- `X-Final-URL` — URL after redirects
-- `X-Upstream-Status` — HTTP status from the target site
+- `X-Final-URL`: URL after redirects
+- `X-Upstream-Status`: HTTP status from the target site
 
 ## Install this skill
 
