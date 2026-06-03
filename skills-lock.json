@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "reader-fetch": {
+      "source": "/Users/marban/Documents/Coding/reader",
+      "sourceType": "local",
+      "computedHash": "b93568eb445f599a7455882c3426d9a0cc543f6df8531dec2fe08f4c79a307de"
+    }
+  }
+}

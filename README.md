@@ -6,33 +6,60 @@ Hosted API that turns URLs into clean markdown (or JSON) for AI agents and scrip
 
 **https://reader.marban.lol** · alias **https://r.marban.lol** · [docs](https://reader.marban.lol/docs)
 
-## For agents
+## How agents should read a page
 
-Give your agent the `reader-fetch` skill so it knows to call Reader instead of pulling raw HTML:
+Raw `curl` on a URL usually returns HTML full of chrome, ads, and scripts. Reader strips that and returns what you actually need to reason about the page.
+
+**1. Install the skill** (so the agent reaches for Reader by default):
 
 ```bash
 npx skills add Rahuletto/reader@reader-fetch -g -y
 ```
 
-Then a typical read is:
+**2. Fetch markdown** (default). URL must be encoded:
 
 ```bash
-curl -sG "https://reader.marban.lol/read" --data-urlencode "url=https://example.com/article"
+curl -sG "https://reader.marban.lol/read" \
+  --data-urlencode "url=https://example.com/docs/guide" \
+  --data-urlencode "cache=bypass"
 ```
 
-You get article markdown back. Use `cache=bypass` when the page must be fresh. Use `format=json` when you need structured blocks instead of prose.
+Use the response body as context. Check `X-Final-URL` if redirects matter for citations.
 
-| Task | Call |
-|------|------|
-| Read / summarize / cite | `GET /read?url=...` |
-| Structured extraction | `GET /read?url=...&format=json` |
-| Typed blocks + markers | `&classify=true&marker=link,pricing` |
-| Knowledge graph | `GET /graph?url=...` |
-| Page changed since last visit | `GET /read?url=...&track=true` then `GET /diff?url=...` |
+**3. Pick the right shape**
 
-In Cursor, Codex, Claude Code, or any agent with the skills CLI: install once, and the agent should prefer Reader whenever the job is "open this URL and understand it."
+| You need | Do this |
+|----------|---------|
+| Summary, Q&A, quotes, code review of a doc | `format=markdown` (default) |
+| Tables, lists, block-level logic | `format=json` |
+| Minimal tokens | `format=text` |
+| People, products, orgs linked to Wikidata | `GET /graph?url=...` |
+| “What changed on this page?” | `track=true` on `/read`, then `GET /diff?url=...` |
 
-Skill source: [`skills/reader-fetch/SKILL.md`](skills/reader-fetch/SKILL.md)
+**4. Narrow noisy pages**
+
+```bash
+# Only the main column
+curl -sG "https://reader.marban.lol/read" \
+  --data-urlencode "url=https://example.com/post" \
+  --data-urlencode "selector=article"
+
+# Machine-readable block types (pricing, dates, links, …)
+curl -sG "https://reader.marban.lol/read" \
+  --data-urlencode "url=https://example.com/pricing" \
+  --data-urlencode "classify=true" \
+  --data-urlencode "marker=pricing,link"
+```
+
+**5. Workflow the agent should follow**
+
+1. User gives a URL (or the task implies one).
+2. Call Reader `/read` with `cache=bypass` unless a slightly stale copy is fine.
+3. Read markdown (or JSON) from the body; do not parse HTML yourself unless `format=raw`.
+4. Cite `X-Final-URL` when quoting or linking back.
+5. If the page is huge, use `selector` or `format=text` before stuffing everything into context.
+
+Installable skill (Cursor, Claude Code, Codex, etc.): [`skills/reader-fetch/SKILL.md`](skills/reader-fetch/SKILL.md) · `npx skills add Rahuletto/reader@reader-fetch -g -y`
 
 ## Quick example
 
@@ -96,5 +123,3 @@ skills/reader-fetch/   agent skill (skills.sh)
 src/reader.ts          fetch → extract → format
 src/routes/
 ```
-
-Hono · linkedom · Turndown · Scalar
